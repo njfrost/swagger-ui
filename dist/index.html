@@ -19,7 +19,7 @@
   <script type="text/javascript">
     $(function () {
       window.swaggerUi = new SwaggerUi({
-      url: "http://petstore.swagger.wordnik.com/api/api-docs",
+      url: "http://localhost:8080/contour/rest/api-docs",
       dom_id: "swagger-ui-container",
       supportedSubmitMethods: ['get', 'post', 'put', 'delete'],
       onComplete: function(swaggerApi, swaggerUi){
@@ -44,7 +44,45 @@
         console.log("added key " + key);
         window.authorizations.add("key", new ApiKeyAuthorization("api_key", key, "query"));
       }
-    })
+      else {
+        delete window.authorizations.authz['key'];
+      }
+    });
+      
+    $('#input_user, #input_pass').change(function() {
+      var user = $('#input_user').val().trim();
+      var pass = $('#input_pass').val().trim();
+      if (user && pass) {
+        if (!window.btoa) {
+          alert("Browser doesn't support base64 encoding out of the box.  Please use Chrome/Firefox");
+          return;
+        }
+        var base64encoded = btoa(user + ":" + pass);
+        window.authorizations.add("user-pass", new ApiKeyAuthorization("Authorization", "Basic " + base64encoded, "header"));
+      }
+      else {
+        delete window.authorizations.authz['user-pass'];
+      }
+    });
+      
+    $('#auth-method-selector').on('click', 'a', function(e) {
+      var method = $(e.target).data('auth'),
+          userField = $('#input_user'),
+          passField = $('#input_pass'),
+          apiField = $('#input_apiKey');
+      
+      if (method == 'api') {
+        userField.hide().val('').change();
+        passField.hide().val('').change();
+        apiField.show();
+      }
+      else if (method == 'user-pass') {
+        apiField.hide().val('').change();
+        userField.show();
+        passField.show();
+      }
+    });
+    
     window.swaggerUi.load();
   });
 
@@ -64,7 +102,15 @@
         <img id="show-wordnik-dev-icon" src="images/wordnik_api.png" title="Show Wordnik Developer Apis">
       </div>
       <div class='input'><input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl" type="text"/></div>
-      <div class='input'><input placeholder="api_key" id="input_apiKey" name="apiKey" type="text"/></div>
+      <div id="auth-method-selector" class="input">
+        <a href="#" data-auth="api">API</a>
+        <a href="#" data-auth="user-pass">U/P</a>
+      </div>
+      <div class='input'>
+        <input placeholder="api_key" id="input_apiKey" name="apiKey" type="text"/>
+        <input placeholder="user" id="input_user" name="apiUser" type="text" style="display: none"/>
+        <input placeholder="pass" id="input_pass" name="apiPass" type="text" style="display: none"/>
+      </div>
       <div class='input'><a id="explore" href="#">Explore</a></div>
     </form>
   </div>

@@ -436,8 +436,23 @@ body #header form#api_selector .input input#input_baseUrl {
     width: 400px;
 }
 
+body #header form#api_selector #auth-method-selector {
+    font-size: 75%
+}
+
+body #header form#api_selector #auth-method-selector a {
+    display: block;
+    margin-bottom: 3px;
+}
+
 body #header form#api_selector .input input#input_apiKey {
     width: 200px;
+}
+
+body #header form#api_selector .input input#input_user,
+body #header form#api_selector .input input#input_pass {
+    width: 90px;
+    box-sizing: border-box;
 }
 
 body #header form#api_selector .input a#explore {
@@ -1780,3 +1795,4 @@ pre code {
 .info_contact {
   padding-bottom: 5px;
 }
+
