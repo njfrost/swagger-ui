@@ -106,6 +106,9 @@
               _ref2 = response.apis;
               for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
                 resource = _ref2[_k];
+                if(resource.path == "/") {
+									continue;
+								}
                 res = new SwaggerResource(resource, _this);
                 _this.apis[res.name] = res;
                 _this.apisArray.push(res);
